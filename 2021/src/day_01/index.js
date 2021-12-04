@@ -1,25 +1,13 @@
-function howMuchIncreased(values) {
+function nPreviousValues(values, index, n = 2){
+    return Array.from({length: n}, (_, i) => values[index - i]).reduce((pv, cv) => pv + cv, 0);
+}
+
+function increment(values, slidingWindow = 3) {
 
     var result = 0;
 
-    for(var i = 1; i < values.length ; i++) {
-        if(values[i] > values[i-1]) {
-            result++;
-        }
-    }
-    return result;
-}
-
-function threePreviousValues(values, index){
-    return values[index] + values[index - 1] + values[index - 2];
-}
-
-function howMuchSmoothlyIncreased(values) {
-
-    var result = 0;
-
-    for(var i = 3; i < values.length ; i++) {
-        if(threePreviousValues(values, i) > threePreviousValues(values, i-1)) {
+    for(var i = slidingWindow; i < values.length ; i++) {
+        if(nPreviousValues(values, i, slidingWindow) > nPreviousValues(values, i-1, slidingWindow)) {
             result++;
         }
     }
@@ -28,5 +16,5 @@ function howMuchSmoothlyIncreased(values) {
 
 
 
-exports.howMuchIncreased = howMuchIncreased;
-exports.howMuchSmoothlyIncreased = howMuchSmoothlyIncreased;
+exports.howMuchIncreased = (values) => increment(values, 1);
+exports.howMuchSmoothlyIncreased = (values) => increment(values, 3);
